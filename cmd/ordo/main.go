@@ -23,7 +23,7 @@ func main() {
 	}
 
 	for _, file := range dummy_files {
-		resolved_dir := resolver.Resolve(file)
+		resolved_dir := resolver.Resolve(file, true, true)
 		target_path := filepath.Join(resolved_dir, file)
 		fmt.Printf("Resolving %s -> %s\n", file, target_path)
 	}

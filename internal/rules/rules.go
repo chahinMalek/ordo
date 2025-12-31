@@ -29,14 +29,19 @@ func NewResolver(rules []Rule, fallbackDir string) *Resolver {
 	}
 }
 
-func (r *Resolver) Resolve(filename string) string {
+func (r *Resolver) Resolve(filename string, useGroups bool, useFallback bool) string {
 	ext := filepath.Ext(filename)
 	cleanExt := normalizeExt(ext)
 	if cleanExt == "" {
-		return r.fallbackDir
+		if useFallback {
+			return r.fallbackDir
+		}
+		return ""
 	}
-	if target, found := r.extensionMap[cleanExt]; found {
-		return target
+	if useGroups {
+		if target, found := r.extensionMap[cleanExt]; found {
+			return target
+		}
 	}
 	return cleanExt
 }
