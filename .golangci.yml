@@ -1,0 +1,36 @@
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank-ident: true
+  govet:
+    enable:
+      - shadow
+  revive:
+    rules:
+      - name: indent-error-flow
+      - name: unexported-return
+      - name: unused-parameter
+      - name: unreachable-code
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - revive
+    - gofmt
+    - misspell
+
+run:
+  timeout: 5m
+  issues-exit-code: 1
+  tests: true
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0

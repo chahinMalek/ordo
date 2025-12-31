@@ -1,7 +1,30 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/chahinMalek/ordo/internal/config"
+	"github.com/chahinMalek/ordo/internal/rules"
+	"os"
+	"path/filepath"
+)
 
 func main() {
-    fmt.Println("Ordo is starting...")
+	cfg, err := config.Load()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
+		os.Exit(1)
+	}
+	resolver := rules.NewResolver(cfg.Rules, cfg.FallbackDir)
+
+	dummy_files := []string{
+		"test.jpg",
+		"test.env",
+		"test.txt",
+	}
+
+	for _, file := range dummy_files {
+		resolved_dir := resolver.Resolve(file)
+		target_path := filepath.Join(resolved_dir, file)
+		fmt.Printf("Resolving %s -> %s\n", file, target_path)
+	}
 }
