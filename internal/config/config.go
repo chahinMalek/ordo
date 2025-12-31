@@ -1,67 +1,84 @@
 package config
 
 import (
-	"github.com/BurntSushi/toml"
-	"github.com/chahinMalek/ordo/internal/rules"
+	"embed"
 	"os"
 	"path/filepath"
+
+	"github.com/BurntSushi/toml"
+	"github.com/chahinMalek/ordo/internal/rules"
+)
+
+//go:embed config.toml
+var defaultConfigFile embed.FS
+
+const (
+	configFileName = "config.toml"
+	appName        = "ordo"
 )
 
 type Config struct {
-	FallbackDir string       `toml:"fallback_dir"`
-	Rules       []rules.Rule `toml:"rules"`
-}
-
-func DefaultConfig() *Config {
-	return &Config{
-		FallbackDir: "unclassified",
-		Rules: []rules.Rule{
-			{
-				TargetDir:  "images",
-				Extensions: []string{"jpg", "jpeg", "png", "gif", "webp"},
-			},
-			{
-				TargetDir:  "videos",
-				Extensions: []string{"mp4", "avi", "mkv", "mov", "wmv"},
-			},
-			{
-				TargetDir:  "documents",
-				Extensions: []string{"pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"},
-			},
-			{
-				TargetDir:  "music",
-				Extensions: []string{"mp3", "wav", "flac", "aac", "ogg"},
-			},
-			{
-				TargetDir:  "archives",
-				Extensions: []string{"zip", "tar", "gz", "bz2", "7z"},
-			},
-			{
-				TargetDir:  "text",
-				Extensions: []string{"txt", "md", "markdown"},
-			},
-			{
-				TargetDir:  "notebooks",
-				Extensions: []string{"ipynb"},
-			},
-		},
-	}
+	FallbackDir string                `toml:"fallback_dir"`
+	Rules       map[string]rules.Rule `toml:"rules"`
 }
 
 func Load() (*Config, error) {
-	cfg := DefaultConfig()
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return nil, err
 	}
 
-	configPath := filepath.Join(configDir, "ordo", "config.toml")
-
-	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		return cfg, nil
+	configPath := filepath.Join(configDir, appName, configFileName)
+	_, err = os.Stat(configPath)
+	if os.IsNotExist(err) {
+		return loadEmbedded(), nil
 	}
-	if _, err := toml.DecodeFile(configPath, cfg); err != nil {
+
+	var cfg Config
+	_, err = toml.DecodeFile(configPath, &cfg)
+	if err != nil {
 		return nil, err
 	}
-	return cfg, nil
+	return &cfg, nil
+}
+
+func Init() error {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return err
+	}
+
+	ordoConfigDir := filepath.Join(configDir, appName)
+	configPath := filepath.Join(ordoConfigDir, configFileName)
+
+	// ensure the config directory exists
+	err = os.MkdirAll(ordoConfigDir, 0755)
+	if err != nil {
+		return err
+	}
+
+	// Read default from embedded
+	var data []byte
+	data, err = defaultConfigFile.ReadFile(configFileName)
+	if err != nil {
+		return err
+	}
+
+	// Write the default one
+	return os.WriteFile(configPath, data, 0644)
+}
+
+func loadEmbedded() *Config {
+	var cfg Config
+	data, err := defaultConfigFile.ReadFile(configFileName)
+	if err != nil {
+		return &Config{FallbackDir: "unclassified", Rules: make(map[string]rules.Rule)}
+	}
+
+	_, err = toml.Decode(string(data), &cfg)
+	if err != nil {
+		return &Config{FallbackDir: "unclassified", Rules: make(map[string]rules.Rule)}
+	}
+
+	return &cfg
 }

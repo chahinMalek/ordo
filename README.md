@@ -4,8 +4,8 @@
 
 ## ✨ Features
 
-- **Unified Rule System**: Everything is a rule. A rule maps extensions (like `jpg`, `png`) to a folder (like `images`).
-- **Smart Fallback**: If a file extension isn't covered by a rule, Ordo automatically uses the extension as the folder name (e.g., `.pdf` → `pdf/`).
+- **Customizable Rules**: Define your own rules to group specific extensions (like `jpg` and `png`) together into target folders (like `images`).
+- **Smart Fallback**: If a file extension isn't covered by a rule, Ordo automatically uses file extension as the folder name (e.g., `.pdf` → `pdf/`).
 - **Predefined Groups**: Comes out-of-the-box with logical groupings for `images`, `documents`, `audio`, and more.
 - **Native Performance**: Built with Go, it's a single binary with zero external dependencies and works across macOS, Linux, and Windows.
 - **Safe by Design**: Ordo separates planning from execution. It detects name collisions and ensures no files are ever overwritten.

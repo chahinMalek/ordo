@@ -3,8 +3,8 @@ package rules
 import "testing"
 
 func TestResolve(t *testing.T) {
-	rules := []Rule{
-		{TargetDir: "images", Extensions: []string{"jpg", "png"}},
+	rules := map[string]Rule{
+		"images": {Extensions: []string{"jpg", "png"}},
 	}
 	r := NewResolver(rules, "unknown")
 

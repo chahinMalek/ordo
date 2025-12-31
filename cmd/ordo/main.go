@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/chahinMalek/ordo/internal/config"
-	"github.com/chahinMalek/ordo/internal/rules"
 	"os"
 	"path/filepath"
+
+	"github.com/chahinMalek/ordo/internal/config"
+	"github.com/chahinMalek/ordo/internal/rules"
 )
 
 func main() {

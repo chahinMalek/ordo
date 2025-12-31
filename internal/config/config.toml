@@ -1,0 +1,22 @@
+fallback_dir = "unclassified"
+
+[rules.images]
+extensions = ["jpg", "jpeg", "png", "gif", "webp"]
+
+[rules.videos]
+extensions = ["mp4", "avi", "mkv", "mov", "wmv"]
+
+[rules.documents]
+extensions = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"]
+
+[rules.audio]
+extensions = ["mp3", "wav", "flac", "aac", "ogg"]
+
+[rules.archives]
+extensions = ["zip", "tar", "gz", "bz2", "7z"]
+
+[rules.text]
+extensions = ["txt", "md", "markdown"]
+
+[rules.notebooks]
+extensions = ["ipynb"]

@@ -6,8 +6,7 @@ import (
 )
 
 type Rule struct {
-	TargetDir  string
-	Extensions []string
+	Extensions []string `toml:"extensions"`
 }
 
 type Resolver struct {
@@ -15,12 +14,12 @@ type Resolver struct {
 	fallbackDir  string
 }
 
-func NewResolver(rules []Rule, fallbackDir string) *Resolver {
+func NewResolver(rules map[string]Rule, fallbackDir string) *Resolver {
 	extMap := make(map[string]string)
-	for _, rule := range rules {
+	for targetDir, rule := range rules {
 		for _, ext := range rule.Extensions {
 			cleanExt := normalizeExt(ext)
-			extMap[cleanExt] = rule.TargetDir
+			extMap[cleanExt] = targetDir
 		}
 	}
 	return &Resolver{
