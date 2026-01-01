@@ -1,6 +1,7 @@
 package organizer
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -25,6 +26,32 @@ type ActionPlan struct {
 	MkDirs []MkDirAction
 	Moves  []MoveAction
 	Skips  []SkipAction
+}
+
+const historyFile = ".ordo_history"
+
+func (plan *ActionPlan) SavePlan(baseDir string) {
+	planFile := filepath.Join(baseDir, historyFile)
+
+	// ensure directory exists
+	err := os.MkdirAll(filepath.Dir(planFile), 0755)
+	if err != nil {
+		return
+	}
+
+	f, err := os.Create(planFile)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+
+	// save commands to history file
+	for _, action := range plan.MkDirs {
+		fmt.Fprintln(f, "mkdir", action.Dir)
+	}
+	for _, action := range plan.Moves {
+		fmt.Fprintln(f, "mv", action.SourcePath, action.TargetPath)
+	}
 }
 
 func ListFiles(dir string) ([]string, error) {
