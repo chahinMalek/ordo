@@ -15,7 +15,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error loading config: %v\n", err)
 		os.Exit(1)
 	}
-	resolver := rules.NewResolver(cfg.Rules, cfg.FallbackDir)
+	resolver := rules.NewResolver(cfg.Rules)
 
 	dummy_files := []string{
 		"test.jpg",
@@ -24,7 +24,7 @@ func main() {
 	}
 
 	for _, file := range dummy_files {
-		resolved_dir := resolver.Resolve(file, true, true)
+		resolved_dir := resolver.Resolve(file, true)
 		target_path := filepath.Join(resolved_dir, file)
 		fmt.Printf("Resolving %s -> %s\n", file, target_path)
 	}

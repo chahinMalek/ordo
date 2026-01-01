@@ -1,9 +1,10 @@
 package organizer
 
 import (
-	"github.com/chahinMalek/ordo/internal/rules"
 	"os"
 	"path/filepath"
+
+	"github.com/chahinMalek/ordo/internal/rules"
 )
 
 type MoveAction struct {
@@ -35,7 +36,6 @@ func Plan(
 	baseDir string,
 	filenames []string,
 	useGroups bool,
-	useFallback bool,
 	resolver *rules.Resolver,
 ) (*ActionPlan, error) {
 
@@ -43,7 +43,7 @@ func Plan(
 		Moves: make([]MoveAction, 0),
 	}
 	for _, filename := range filenames {
-		targetDir := resolver.Resolve(filename, useGroups, useFallback)
+		targetDir := resolver.Resolve(filename, useGroups)
 
 		sourcePath := filepath.Join(baseDir, filename)
 		targetPath := filepath.Join(baseDir, targetDir, filename)

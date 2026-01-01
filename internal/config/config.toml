@@ -1,4 +1,3 @@
-fallback_dir = "unclassified"
 
 [rules.images]
 extensions = ["jpg", "jpeg", "png", "gif", "webp"]

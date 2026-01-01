@@ -18,8 +18,7 @@ const (
 )
 
 type Config struct {
-	FallbackDir string                `toml:"fallback_dir"`
-	Rules       map[string]rules.Rule `toml:"rules"`
+	Rules map[string]rules.Rule `toml:"rules"`
 }
 
 func Load() (*Config, error) {
@@ -72,12 +71,12 @@ func loadEmbedded() *Config {
 	var cfg Config
 	data, err := defaultConfigFile.ReadFile(configFileName)
 	if err != nil {
-		return &Config{FallbackDir: "unclassified", Rules: make(map[string]rules.Rule)}
+		return &Config{Rules: make(map[string]rules.Rule)}
 	}
 
 	_, err = toml.Decode(string(data), &cfg)
 	if err != nil {
-		return &Config{FallbackDir: "unclassified", Rules: make(map[string]rules.Rule)}
+		return &Config{Rules: make(map[string]rules.Rule)}
 	}
 
 	return &cfg

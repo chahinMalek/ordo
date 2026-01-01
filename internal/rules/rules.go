@@ -11,10 +11,9 @@ type Rule struct {
 
 type Resolver struct {
 	extensionMap map[string]string
-	fallbackDir  string
 }
 
-func NewResolver(rules map[string]Rule, fallbackDir string) *Resolver {
+func NewResolver(rules map[string]Rule) *Resolver {
 	extMap := make(map[string]string)
 	for targetDir, rule := range rules {
 		for _, ext := range rule.Extensions {
@@ -24,17 +23,13 @@ func NewResolver(rules map[string]Rule, fallbackDir string) *Resolver {
 	}
 	return &Resolver{
 		extensionMap: extMap,
-		fallbackDir:  fallbackDir,
 	}
 }
 
-func (r *Resolver) Resolve(filename string, useGroups bool, useFallback bool) string {
+func (r *Resolver) Resolve(filename string, useGroups bool) string {
 	ext := filepath.Ext(filename)
 	cleanExt := normalizeExt(ext)
 	if cleanExt == "" {
-		if useFallback {
-			return r.fallbackDir
-		}
 		return ""
 	}
 	if useGroups {
