@@ -8,7 +8,7 @@
 - **Smart Fallback**: If a file extension isn't covered by a rule, Ordo automatically uses the file extension as the folder name (e.g., `.pdf` → `pdf/`).
 - **Predefined Groups**: Comes out-of-the-box with logical groupings for `images`, `documents`, `audio`, `videos`, and `archives`.
 - **Undo Capability**: Regret a move? Ordo tracks its actions in a local `.ordo_history` file, allowing you to instantly revert the last operation.
-- **Safe by Design**: Ordo separates planning from execution. It detects path blockages and ensures no files are ever overwritten.
+- **Safe by Design**: Ordo separates planning from execution. It detects path and file collisions and ensures no files are ever overwritten.
 - **Dry Run Support**: Preview exactly what changes will be made before any file is moved.
 - **Native Performance**: Built with Go, it's a single binary with zero external dependencies and works across macOS, Linux, and Windows.
 
@@ -25,11 +25,6 @@ go install github.com/chahinMalek/ordo@latest
 Organize the current directory using active rules (with extension fallback):
 ```bash
 ordo
-```
-
-Organize a specific directory:
-```bash
-ordo --path ~/Downloads
 ```
 
 Preview changes without moving any files:
