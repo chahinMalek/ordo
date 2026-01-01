@@ -22,12 +22,11 @@ type Config struct {
 }
 
 func Load() (*Config, error) {
-	configDir, err := os.UserConfigDir()
+	configPath, err := GetConfigPath()
 	if err != nil {
 		return nil, err
 	}
 
-	configPath := filepath.Join(configDir, appName, configFileName)
 	_, err = os.Stat(configPath)
 	if os.IsNotExist(err) {
 		return loadEmbedded(), nil
@@ -39,6 +38,41 @@ func Load() (*Config, error) {
 		return nil, err
 	}
 	return &cfg, nil
+}
+
+func (c *Config) Save() error {
+	configPath, err := GetConfigPath()
+	if err != nil {
+		return err
+	}
+
+	// ensure directory exists
+	err = os.MkdirAll(filepath.Dir(configPath), 0755)
+	if err != nil {
+		return err
+	}
+
+	f, err := os.Create(configPath)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		closeErr := f.Close()
+		if err == nil {
+			err = closeErr
+		}
+	}()
+
+	err = toml.NewEncoder(f).Encode(c)
+	return err
+}
+
+func GetConfigPath() (string, error) {
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(configDir, appName, configFileName), nil
 }
 
 func Init() error {
