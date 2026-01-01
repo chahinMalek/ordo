@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/chahinMalek/ordo/internal/rules"
 )
@@ -47,11 +48,44 @@ func (plan *ActionPlan) SavePlan(baseDir string) {
 
 	// save commands to history file
 	for _, action := range plan.MkDirs {
-		fmt.Fprintln(f, "mkdir", action.Dir)
+		fmt.Fprintf(f, "mkdir\t%s\n", action.Dir)
 	}
 	for _, action := range plan.Moves {
-		fmt.Fprintln(f, "mv", action.SourcePath, action.TargetPath)
+		fmt.Fprintf(f, "mv\t%s\t%s\n", action.SourcePath, action.TargetPath)
 	}
+}
+
+func LoadPlan(baseDir string) (*ActionPlan, error) {
+	planFile := filepath.Join(baseDir, historyFile)
+	data, err := os.ReadFile(planFile)
+	if err != nil {
+		return nil, err
+	}
+
+	plan := &ActionPlan{}
+	lines := strings.Split(string(data), "\n")
+	for _, line := range lines {
+		if line == "" {
+			continue
+		}
+		parts := strings.Split(line, "\t")
+		if len(parts) < 2 {
+			continue
+		}
+
+		switch parts[0] {
+		case "mkdir":
+			plan.MkDirs = append(plan.MkDirs, MkDirAction{Dir: parts[1]})
+		case "mv":
+			if len(parts) == 3 {
+				plan.Moves = append(plan.Moves, MoveAction{
+					SourcePath: parts[1],
+					TargetPath: parts[2],
+				})
+			}
+		}
+	}
+	return plan, nil
 }
 
 func ListFiles(dir string) ([]string, error) {

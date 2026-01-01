@@ -52,6 +52,36 @@ func (e *Executor) Execute(plan *ActionPlan) error {
 	return nil
 }
 
+func (e *Executor) Revert(plan *ActionPlan) error {
+	// revert moves
+	for _, action := range plan.Moves {
+		if e.Verbose {
+			fmt.Printf("Reverting move: %s -> %s\n", action.TargetPath, action.SourcePath)
+		}
+		err := os.Rename(action.TargetPath, action.SourcePath)
+		if err != nil {
+			return fmt.Errorf("failed to revert move %s to %s: %w", action.TargetPath, action.SourcePath, err)
+		}
+	}
+
+	// revert mkdirs (remove empty directories)
+	for _, action := range plan.MkDirs {
+		if e.Verbose {
+			fmt.Printf("Removing directory if empty: %s\n", action.Dir)
+		}
+		// os.Remove only removes empty directories
+		err := os.Remove(action.Dir)
+		if err != nil && !os.IsNotExist(err) {
+			// ignore errors for non-empty or non-existent directories during revert
+			if e.Verbose {
+				fmt.Printf("Skipped removing %s: %v\n", action.Dir, err)
+			}
+		}
+	}
+
+	return nil
+}
+
 func (e *Executor) printPlan(plan *ActionPlan) {
 	fmt.Println("--- Action Plan (Dry Run) ---")
 

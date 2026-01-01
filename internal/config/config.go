@@ -29,7 +29,10 @@ func Load() (*Config, error) {
 
 	_, err = os.Stat(configPath)
 	if os.IsNotExist(err) {
-		return loadEmbedded(), nil
+		err = Init()
+		if err != nil {
+			return loadEmbedded(), nil
+		}
 	}
 
 	var cfg Config

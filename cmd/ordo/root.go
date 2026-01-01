@@ -16,7 +16,6 @@ var (
 	useGroups  bool
 	dryRun     bool
 	verbose    bool
-	configPath string
 )
 
 var rootCmd = &cobra.Command{
@@ -26,12 +25,7 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var cfg *config.Config
 		var err error
-		if configPath != "" {
-			// todo: load from specific path
-			cfg, err = config.Load()
-		} else {
-			cfg, err = config.Load()
-		}
+		cfg, err = config.Load()
 
 		if err != nil {
 			return fmt.Errorf("failed to load config: %w", err)
@@ -68,7 +62,30 @@ var revertCmd = &cobra.Command{
 	Use:   "revert",
 	Short: "Revert the last organization plan",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// todo: implement
+		absPath, err := os.Getwd()
+		if targetPath != "" {
+			absPath, err = filepath.Abs(targetPath)
+		}
+		if err != nil {
+			return err
+		}
+
+		plan, err := organizer.LoadPlan(absPath)
+		if err != nil {
+			return fmt.Errorf("failed to load history for revert: %w", err)
+		}
+
+		exec := organizer.NewExecutor(dryRun, verbose)
+		err = exec.Revert(plan)
+		if err != nil {
+			return err
+		}
+
+		// delete history file after successful revert
+		historyPath := filepath.Join(absPath, ".ordo_history")
+		os.Remove(historyPath)
+
+		fmt.Println("Revert completed successfully.")
 		return nil
 	},
 }
@@ -85,7 +102,6 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&useGroups, "groups", "g", true, "Enable group-based organization")
 	rootCmd.PersistentFlags().BoolVarP(&dryRun, "dry-run", "d", false, "Preview changes without moving any files")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Print detailed information during execution")
-	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "Path to custom configuration file")
 
 	rootCmd.AddCommand(revertCmd)
 }
