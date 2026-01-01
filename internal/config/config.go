@@ -56,15 +56,9 @@ func (c *Config) Save() error {
 	if err != nil {
 		return err
 	}
-	defer func() {
-		closeErr := f.Close()
-		if err == nil {
-			err = closeErr
-		}
-	}()
+	defer f.Close()
 
-	err = toml.NewEncoder(f).Encode(c)
-	return err
+	return toml.NewEncoder(f).Encode(c)
 }
 
 func GetConfigPath() (string, error) {
