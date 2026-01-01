@@ -1,21 +1,59 @@
 
 [rules.images]
-extensions = ["jpg", "jpeg", "png", "gif", "webp"]
+extensions = ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "tiff", "tif", "heic", "heif", "ico", "psd", "eps", "raw", "dng", "cr2", "nef", "arw", "orf", "sr2"]
 
 [rules.videos]
-extensions = ["mp4", "avi", "mkv", "mov", "wmv"]
-
-[rules.documents]
-extensions = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"]
+extensions = ["mp4", "mkv", "mov", "avi", "wmv", "flv", "webm", "m4v", "mpg", "mpeg", "3gp", "3g2", "ts", "mts", "m2ts", "vob"]
 
 [rules.audio]
-extensions = ["mp3", "wav", "flac", "aac", "ogg"]
+extensions = ["mp3", "wav", "flac", "m4a", "aac", "ogg", "wma", "m4b", "aiff", "alac", "amr", "ape", "au", "dsf", "mka", "opus"]
+
+[rules.documents]
+extensions = ["pdf", "doc", "docx", "odt", "ods", "odp", "rtf", "pages", "numbers", "key", "epub", "mobi", "azw3", "fb2", "djvu", "chm"]
 
 [rules.archives]
-extensions = ["zip", "tar", "gz", "bz2", "7z"]
+extensions = ["zip", "rar", "7z", "tar", "gz", "bz2", "xz", "dmg", "iso", "pkg", "deb", "rpm", "jar", "war", "ear"]
 
 [rules.text]
-extensions = ["txt", "md", "markdown"]
+extensions = ["txt", "csv", "tsv", "log", "asc"]
 
-[rules.notebooks]
+[rules.latex]
+extensions = ["tex"]
+
+[rules.spreadsheets]
+extensions = ["xls", "xlsx"]
+
+[rules.presentations]
+extensions = ["ppt", "pptx"]
+
+[rules.markdown]
+extensions = ["md", "markdown"]
+
+[rules.code]
+extensions = [
+    "go", "py", "js", "ts", "tsx", "jsx", "c", "cpp", "h", "hpp", "rs", "swift",
+    "kt", "java", "html", "css", "scss", "sass", "json", "yaml", "yml", "toml",
+    "xml", "sql", "sh", "bash", "zsh", "php", "rb", "pl", "lua", "dart", "cs",
+    "m", "mm", "gradle", "cmake", "makefile", "dockerfile", "sol", "proto"
+]
+
+[rules.jupyter_notebooks]
 extensions = ["ipynb"]
+
+[rules.fonts]
+extensions = ["ttf", "otf", "woff", "woff2", "eot", "pfa", "pfb"]
+
+[rules.executables]
+extensions = ["exe", "msi", "app", "bin", "bat", "cmd", "com", "scr"]
+
+[rules.databases]
+extensions = ["db", "sqlite", "sqlite3", "sql", "mdb", "accdb", "dbf", "pdb"]
+
+[rules.design]
+extensions = ["fig", "sketch", "xd", "affinity", "afdesign", "afphoto", "afpub"]
+
+[rules.cad_3d]
+extensions = ["dwg", "dxf", "stl", "obj", "fbx", "blend", "step", "stp", "iges", "igs", "3ds", "max", "c4d"]
+
+[rules.system]
+extensions = ["sys", "dll", "so", "dylib", "cfg", "ini", "reg", "plist"]
