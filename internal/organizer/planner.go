@@ -63,8 +63,7 @@ func LoadPlan(baseDir string) (*ActionPlan, error) {
 	}
 
 	plan := &ActionPlan{}
-	lines := strings.Split(string(data), "\n")
-	for _, line := range lines {
+	for line := range strings.SplitSeq(string(data), "\n") {
 		if line == "" {
 			continue
 		}
